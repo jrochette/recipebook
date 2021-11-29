@@ -10,9 +10,9 @@ ENV YOUR_ENV=${YOUR_ENV} \
   PIP_NO_CACHE_DIR=off \
   PIP_DISABLE_PIP_VERSION_CHECK=on \
   PIP_DEFAULT_TIMEOUT=100 \
-  POETRY_VERSION=1.0.0
+  POETRY_VERSION=1.1.11
 
-RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev
+RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev postgresql-client
 
 # System deps:
 RUN pip install "poetry==$POETRY_VERSION"

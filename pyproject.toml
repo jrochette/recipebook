@@ -8,10 +8,12 @@ authors = ["Jonathan Rochette <rochette.jonathan@gmail.com>"]
 python = "^3.9"
 django = "^3.2.9"
 djangorestframework = "^3.12.4"
+psycopg2 = "^2.8.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 flake8 = "^4.0.1"
+black = {version = "^21.11b1", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
