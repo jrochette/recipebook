@@ -1,8 +1,13 @@
 from django.db.models import query
-from rest_framework import viewsets, mixins, authentication, permissions
+from rest_framework import serializers, viewsets, mixins, authentication, permissions
 from rest_framework.decorators import authentication_classes, permission_classes
-from core.models import Tag, Ingredient
-from recipe.serializers import TagSerializer, IngredientSerializer
+from core.models import Recipe, Tag, Ingredient
+from recipe.serializers import (
+    RecipeDetailSerializer,
+    RecipeSerializer,
+    TagSerializer,
+    IngredientSerializer,
+)
 
 
 class BaseRecipeAttributeViewSet(
@@ -34,3 +39,27 @@ class IngredientViewSet(BaseRecipeAttributeViewSet):
 
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
+
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    """Manage recipes in the database"""
+
+    serializer_class = RecipeSerializer
+    queryset = Recipe.objects.all().order_by("-id")
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        """Return recipes for the current authenticated user only"""
+        return self.queryset.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        """Return appropirate serializer class based on action"""
+        if self.action == "retrieve":
+            return RecipeDetailSerializer
+
+        return self.serializer_class
+
+    def perform_create(self, serializer):
+        """Assign the current authenticated user to recipe"""
+        serializer.save(user=self.request.user)
